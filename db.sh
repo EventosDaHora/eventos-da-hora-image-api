@@ -1,0 +1,1 @@
+docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 --name imagedb -e POSTGRES_USER=eventos-da-hora -e POSTGRES_PASSWORD=eventos-da-hora -e POSTGRES_DB=imagedb -p 5402:5432 postgres:10.5
