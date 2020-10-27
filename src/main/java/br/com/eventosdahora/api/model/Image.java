@@ -25,18 +25,18 @@ public class Image implements Serializable {
 	private String dsImageType;
 
 	@Column(name="file")
-	private byte[] file;
+	private String file;
 
 	public Image() {
 	}
 	
-	public Image(String nmImage, String dsImageType, byte[] file) {
+	public Image(String nmImage, String dsImageType, String file) {
 		this.nmImage = nmImage;
 		this.dsImageType = dsImageType;
 		this.file = file;
 	}
 	
-	public Image(UUID idImage, String nmImage, String dsImageType, byte[] file) {
+	public Image(UUID idImage, String nmImage, String dsImageType, String file) {
 		this.idImage = idImage;
 		this.nmImage = nmImage;
 		this.dsImageType = dsImageType;
@@ -44,12 +44,12 @@ public class Image implements Serializable {
 	}
 	
 	@JsonIgnore
-	public byte[] getFile() {
+	public String getFile() {
 		return this.file;
 	}
 
 	@JsonProperty
-	public void setFile(byte[] file) {
+	public void setFile(String file) {
 		this.file = file;
 	}
 	
@@ -87,7 +87,7 @@ public class Image implements Serializable {
 		       "idImage=" + idImage +
 		       ", nmImage='" + nmImage + '\'' +
 		       ", dsImageType='" + dsImageType + '\'' +
-		       ", file=" + Arrays.toString(file) +
+		       ", file=" + (file) +
 		       '}';
 	}
 }

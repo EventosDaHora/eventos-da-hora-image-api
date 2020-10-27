@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.UUID;
 
 @CrossOrigin
@@ -24,7 +26,18 @@ public class ImageController {
 	public ImageController(ImageService imageService) {
 		this.imageService = imageService;
 	}
-
+	
+	@GetMapping
+	@ApiModelProperty(position = 1)
+	@ApiOperation(value = "Find File", response = Image.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Consulta realizada com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição")
+	})
+	public ResponseEntity<?> getAll() {
+		return ResponseEntity.ok().body(imageService.getAll());
+	}
+	
 	@GetMapping("/{idImage}")
 	@ApiModelProperty(position = 1)
 	@ApiOperation(value = "Find File", response = Image.class)
@@ -34,12 +47,12 @@ public class ImageController {
 	})
     public ResponseEntity<Resource> downloadFile(@PathVariable("idImage") UUID idImage) {
 		Image image = imageService.getFile(idImage);
-
+		
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(image.getDsImageType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getNmImage() + "\"")
                 .header("file-name",  "\"" + image.getNmImage() + "\"")
-                .body(new ByteArrayResource(image.getFile()));
+                .body(new ByteArrayResource(Base64.getDecoder().decode(image.getFile())));
     }
 
 	@PostMapping
@@ -49,7 +62,7 @@ public class ImageController {
 			@ApiResponse(code = 200, message = "Sucesso ao persistir objeto"),
 			@ApiResponse(code = 400, message = "Erro na requisição")
 	})
-    public ResponseEntity<Image> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Image> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
 		return ResponseEntity.ok().body(imageService.save(file));
     }
 	
