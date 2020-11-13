@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin
@@ -56,18 +57,18 @@ public class ImageController {
     }
 
 	@PostMapping
-	@ApiModelProperty(position = 2)
-	@ApiOperation(value = "Save File", response = Image.class)
+	@ApiModelProperty(position = 4)
+	@ApiOperation(value = "Save Files", response = List.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Sucesso ao persistir objeto"),
 			@ApiResponse(code = 400, message = "Erro na requisição")
 	})
-    public ResponseEntity<Image> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-		return ResponseEntity.ok().body(imageService.save(file));
-    }
+	public ResponseEntity<List<Image>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+		return ResponseEntity.ok().body(imageService.save(files));
+	}
 	
 	@PutMapping("/{idImage}")
-	@ApiModelProperty(position = 3)
+	@ApiModelProperty(position = 5)
 	@ApiOperation(value = "Update File", response = Image.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Sucesso ao persistir objeto"),
@@ -79,7 +80,7 @@ public class ImageController {
     }
 	
 	@DeleteMapping("/{idImage}")
-	@ApiModelProperty(position = 3)
+	@ApiModelProperty(position = 6)
 	@ApiOperation(value = "Delete File")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Sucesso ao persistir objeto"),
