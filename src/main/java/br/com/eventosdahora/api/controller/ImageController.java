@@ -26,7 +26,7 @@ public class ImageController {
 	public ImageController(ImageService imageService) {
 		this.imageService = imageService;
 	}
-	
+
 	@GetMapping
 	@ApiModelProperty(position = 1)
 	@ApiOperation(value = "Find File", response = Image.class)
@@ -37,7 +37,7 @@ public class ImageController {
 	public ResponseEntity<?> getAll() {
 		return ResponseEntity.ok().body(imageService.getAll());
 	}
-	
+
 	@GetMapping("/{idImage}")
 	@ApiModelProperty(position = 1)
 	@ApiOperation(value = "Find File", response = Image.class)
@@ -47,7 +47,7 @@ public class ImageController {
 	})
     public ResponseEntity<Resource> downloadFile(@PathVariable("idImage") UUID idImage) {
 		Image image = imageService.getFile(idImage);
-		
+
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(image.getDsImageType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getNmImage() + "\"")
@@ -65,7 +65,7 @@ public class ImageController {
     public ResponseEntity<Image> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
 		return ResponseEntity.ok().body(imageService.save(file));
     }
-	
+
 	@PutMapping("/{idImage}")
 	@ApiModelProperty(position = 3)
 	@ApiOperation(value = "Update File", response = Image.class)
@@ -77,7 +77,7 @@ public class ImageController {
     											@RequestParam("file") MultipartFile file) {
 		return ResponseEntity.ok().body(imageService.update(idImage, file));
     }
-	
+
 	@DeleteMapping("/{idImage}")
 	@ApiModelProperty(position = 3)
 	@ApiOperation(value = "Delete File")

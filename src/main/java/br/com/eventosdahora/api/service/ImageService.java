@@ -13,6 +13,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ImageService {
@@ -23,7 +24,7 @@ public class ImageService {
 		this.imageRepository = imageRepository;
 	}
 	
-	public Image save(MultipartFile file) throws IOException {
+	public Image save(MultipartFile file) {
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 		
 		try {
@@ -37,6 +38,10 @@ public class ImageService {
 		} catch (IOException ex) {
 			throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
 		}
+	}
+
+	public List<Image> save(MultipartFile[] files) {
+		return Stream.of(files).map(this::save).collect(Collectors.toList());
 	}
 	
 	public Image update(UUID idImage, MultipartFile file) {
