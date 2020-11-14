@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin
@@ -27,7 +26,7 @@ public class ImageController {
 	public ImageController(ImageService imageService) {
 		this.imageService = imageService;
 	}
-	
+
 	@GetMapping
 	@ApiModelProperty(position = 1)
 	@ApiOperation(value = "Find File", response = Image.class)
@@ -38,7 +37,7 @@ public class ImageController {
 	public ResponseEntity<?> getAll() {
 		return ResponseEntity.ok().body(imageService.getAll());
 	}
-	
+
 	@GetMapping("/{idImage}")
 	@ApiModelProperty(position = 1)
 	@ApiOperation(value = "Find File", response = Image.class)
@@ -48,7 +47,7 @@ public class ImageController {
 	})
     public ResponseEntity<Resource> downloadFile(@PathVariable("idImage") UUID idImage) {
 		Image image = imageService.getFile(idImage);
-		
+
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(image.getDsImageType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getNmImage() + "\"")
@@ -57,18 +56,18 @@ public class ImageController {
     }
 
 	@PostMapping
-	@ApiModelProperty(position = 4)
-	@ApiOperation(value = "Save Files", response = List.class)
+	@ApiModelProperty(position = 2)
+	@ApiOperation(value = "Save File", response = Image.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Sucesso ao persistir objeto"),
 			@ApiResponse(code = 400, message = "Erro na requisição")
 	})
-	public ResponseEntity<List<Image>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
-		return ResponseEntity.ok().body(imageService.save(files));
-	}
-	
+    public ResponseEntity<Image> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+		return ResponseEntity.ok().body(imageService.save(file));
+    }
+
 	@PutMapping("/{idImage}")
-	@ApiModelProperty(position = 5)
+	@ApiModelProperty(position = 3)
 	@ApiOperation(value = "Update File", response = Image.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Sucesso ao persistir objeto"),
@@ -78,9 +77,9 @@ public class ImageController {
     											@RequestParam("file") MultipartFile file) {
 		return ResponseEntity.ok().body(imageService.update(idImage, file));
     }
-	
+
 	@DeleteMapping("/{idImage}")
-	@ApiModelProperty(position = 6)
+	@ApiModelProperty(position = 3)
 	@ApiOperation(value = "Delete File")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Sucesso ao persistir objeto"),
